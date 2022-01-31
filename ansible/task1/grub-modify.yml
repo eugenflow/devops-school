@@ -37,7 +37,8 @@
       line: 'GRUB_CMDLINE_LINUX="\1 net.ifnames=0 biosdevname=0"'
       state: present
       backrefs: yes
-    register: output
+    notify: 
+      - Write-changes-GRUB
     when: 
       - check_net_ifnames.found == 0
       - check_biosdevname.found == 0
@@ -50,7 +51,8 @@
       line: 'GRUB_CMDLINE_LINUX="\1 net.ifnames=0"'
       state: present
       backrefs: yes
-    register: output
+    notify: 
+      - Write-changes-GRUB
     when: 
       - check_net_ifnames.found == 0
       - check_biosdevname.found == 1
@@ -64,14 +66,13 @@
       line: 'GRUB_CMDLINE_LINUX="\1 biosdevname=0"'
       state: present
       backrefs: yes
-    register: output
+    notify: 
+      - Write-changes-GRUB
     when: 
       - check_net_ifnames.found == 1
       - check_biosdevname.found == 0
    
-  - name: Write grub configuration file
-    command: /bin/bash /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
-    register: output
-
-  - debug:
-      msg: "{{ output }}"
+  handlers:
+    - name: Write-changes-GRUB
+      command: /bin/bash /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
+      register: output
