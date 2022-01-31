@@ -1,0 +1,41 @@
+---
+#HOW TO RUN
+#ansible-playbook -i ../inventory.yml http-revert.yml --ask-become-pass
+
+- name: httpd package installed
+  hosts: vm-nodes-centos
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+
+  tasks:
+
+  - name: Make sure a service is running
+    systemd:
+      state: stopped
+      name: httpd
+      enabled: yes
+#    register: output
+
+  - name: Firewall permissive TCP rule added via firewalld
+    firewalld:
+      service: http
+      permanent: yes
+      state: disabled
+      zone: public
+      permanent: yes
+      immediate: yes
+#    register: output
+
+  - name: HTTPD package is Installed
+    dnf:
+      name: httpd
+      state: absent
+#    register: output
+ 
+  - name: File /var/www/html/index.html removed
+    file:
+      path: /var/www/html/index.html
+      state: absent
+#    register: output

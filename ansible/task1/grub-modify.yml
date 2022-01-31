@@ -1,0 +1,73 @@
+---
+#HOW TO RUN
+#ansible-playbook -i ../inventory.yml grub-modify.yml --ask-become-pass
+
+- name: httpd package installed
+  hosts: vm-nodes-centos
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+
+  tasks:
+
+#Two tasks below we need for case when variables are already defined one by one
+
+  - name: Check if net.ifnames is not already defined
+    lineinfile:
+      state: absent
+      path: /etc/default/grub
+      regexp: 'net.ifnames='
+    check_mode: true
+    register: check_net_ifnames
+
+  - name: Check if biosdevname is not already defined
+    lineinfile:
+      state: absent
+      path: /etc/default/grub
+      regexp: 'biosdevname='
+    check_mode: true
+    register: check_biosdevname 
+
+  # This task find the proper string and append it with given items
+  - name: "GRUB Options added 'inet.ifnames' and 'biosdevname' "
+    lineinfile:
+      path: /etc/default/grub
+      regexp: ^GRUB_CMDLINE_LINUX="(.*?)"
+      line: 'GRUB_CMDLINE_LINUX="\1 net.ifnames=0 biosdevname=0"'
+      state: present
+      backrefs: yes
+    register: output
+    when: 
+      - check_net_ifnames.found == 0
+      - check_biosdevname.found == 0
+
+# Selective appends for ifnames only
+  - name: "GRUB Options added 'inet.ifnames' "
+    lineinfile:
+      path: /etc/default/grub
+      regexp: ^GRUB_CMDLINE_LINUX="(.*?)"
+      line: 'GRUB_CMDLINE_LINUX="\1 net.ifnames=0"'
+      state: present
+      backrefs: yes
+    register: output
+    when: 
+      - check_net_ifnames.found == 0
+      - check_biosdevname.found == 1
+
+# Selective appends for biosdevname only
+
+  - name: "GRUB Options added 'biosdevname' "
+    lineinfile:
+      path: /etc/default/grub
+      regexp: ^GRUB_CMDLINE_LINUX="(.*?)"
+      line: 'GRUB_CMDLINE_LINUX="\1 biosdevname=0"'
+      state: present
+      backrefs: yes
+    register: output
+    when: 
+      - check_net_ifnames.found == 1
+      - check_biosdevname.found == 0
+   
+  - name: "Execute grub2-mkconfig"
+    shell: grub2-mkconfig

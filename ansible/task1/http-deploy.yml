@@ -1,5 +1,7 @@
-#ansible-playbook -i inventory.yml task1.yml --ask-become-pass
 ---
+#HOW TO RUN
+#ansible-playbook -i ../inventory.yml http-deploy.yml --ask-become-pass
+
 - name: httpd package installed
   hosts: vm-nodes-centos
   remote_user: ansible
@@ -20,7 +22,7 @@
       state: started
       name: httpd
       enabled: yes
-    register: output
+#    register: output
 
   - name: Firewall permissive TCP rule added via firewalld
     firewalld:
@@ -36,7 +38,4 @@
     copy:
       src: /home/ansible/devops-school/ansible/template-index.html
       dest: /var/www/html/index.html
-    register: output
-
-  - debug:
-      msg: "{{ output }}"
+#    register: output
