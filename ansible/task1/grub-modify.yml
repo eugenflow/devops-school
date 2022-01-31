@@ -69,5 +69,9 @@
       - check_net_ifnames.found == 1
       - check_biosdevname.found == 0
    
-  - name: "Execute grub2-mkconfig"
-    shell: grub2-mkconfig
+  - name: Write grub configuration file
+    command: /bin/bash /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
+    register: output
+
+  - debug:
+      msg: "{{ output }}"
