@@ -1,8 +1,9 @@
 ---
 #HOW TO RUN
-#ansible-playbook -i ../inventory.yml grub-modify.yml --ask-become-pass
+#cd /home/ansible/devops-school/ansible
+#ansible-playbook -i inventory.yml task1/grub-modify.yml --ask-become-pass
 
-- name: httpd package installed
+- name: Change default GRUB options and run grub2-mkconfig
   hosts: vm-nodes-centos
   remote_user: ansible
   become: yes
@@ -74,5 +75,4 @@
    
   handlers:
     - name: Write-changes-GRUB
-      command: /bin/bash /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
-      register: output
+      shell: grub2-mkconfig 

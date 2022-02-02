@@ -1,8 +1,9 @@
 ---
 #HOW TO RUN
-#ansible-playbook -i ../inventory.yml http-deploy.yml --ask-become-pass
+#cd /home/ansible/devops-school/ansible
+#ansible-playbook -i inventory.yml task1/http-deploy.yml --ask-become-pass
 
-- name: httpd package installed
+- name: httpd service deployed
   hosts: vm-nodes-centos
   remote_user: ansible
   become: yes

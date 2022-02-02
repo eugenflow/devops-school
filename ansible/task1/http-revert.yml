@@ -1,8 +1,9 @@
 ---
 #HOW TO RUN
-#ansible-playbook -i ../inventory.yml http-revert.yml --ask-become-pass
+#cd /home/ansible/devops-school/ansible
+#ansible-playbook -i inventory.yml task1/http-revert.yml --ask-become-pass
 
-- name: httpd package installed
+- name: httpd service removed
   hosts: vm-nodes-centos
   remote_user: ansible
   become: yes
@@ -11,14 +12,14 @@
 
   tasks:
 
-  - name: Make sure a service is running
+  - name: Make sure a service is not running
     systemd:
       state: stopped
       name: httpd
       enabled: yes
 #    register: output
 
-  - name: Firewall permissive TCP rule added via firewalld
+  - name: Firewall permissive TCP rule removed from firewalld
     firewalld:
       service: http
       permanent: yes

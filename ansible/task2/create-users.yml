@@ -1,0 +1,30 @@
+#HOW TO RUN
+#cd /home/ansible/devops-school/ansible
+#ansible-playbook -i inventory.yml task2/create-users.yml --ask-become-pass
+
+---
+- name: Create users with passwords (Task 2 Ansible)
+  hosts: vm-nodes-centos
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+
+  tasks:
+    - name: Include vars
+      include_vars: 
+        file: credentials.yml
+
+    - name: Users have been created with dict-defined passwords
+      user:
+        name: "{{ item.key }}"
+        password: "{{ item.value | password_hash('sha512') }}"
+        shell: /bin/bash
+        update_password: on_create
+        create_home: yes
+        comment: "{{ item.key }}@.example.com"
+        register: output
+      loop: "{{ users-and-passwords | dict2items }}"
+    
+    - debug:
+        msg: "{{ output }}"

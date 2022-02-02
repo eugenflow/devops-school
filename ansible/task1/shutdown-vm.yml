@@ -1,0 +1,16 @@
+---
+#HOW TO RUN
+#ansible-playbook -i ../inventory.yml shutdown-vm.yml --ask-become-pass
+
+- name: httpd package installed
+  hosts: vm-nodes-centos
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+
+  tasks:
+
+  - name: VM shutted DOWN
+    command: shutdown -h now
+    ignore_errors: True
