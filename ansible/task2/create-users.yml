@@ -11,9 +11,9 @@
   gather_facts: yes
 
   tasks:
-    - name: Include vars
+    - name: Include DICT with encrypted usernames and passwords
       include_vars: 
-        file: credentials.yml
+        file: /home/ansible/devops-school/ansible/task2/credentials.yml
 
     - name: Users have been created with dict-defined passwords
       user:
@@ -22,9 +22,10 @@
         shell: /bin/bash
         update_password: on_create
         create_home: yes
+        #Here small cheating to avoid possible 2-valued dict iterating...
         comment: "{{ item.key }}@.example.com"
-        register: output
-      loop: "{{ users-and-passwords | dict2items }}"
+      loop: "{{ users_dict | dict2items }}"
+      register: output
     
     - debug:
         msg: "{{ output }}"
