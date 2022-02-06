@@ -34,12 +34,12 @@
   - name: "GRUB Options added 'inet.ifnames' and 'biosdevname' "
     lineinfile:
       path: /etc/default/grub
-      regexp: ^GRUB_CMDLINE_LINUX="(.*?)"
+      regexp: '^GRUB_CMDLINE_LINUX="(.*?)"'
       line: 'GRUB_CMDLINE_LINUX="\1 net.ifnames=0 biosdevname=0"'
       state: present
       backrefs: yes
     notify: 
-      - Write-changes-GRUB
+      - Fix-network-and-write-grub-changes
     when: 
       - check_net_ifnames.found == 0
       - check_biosdevname.found == 0
@@ -74,5 +74,20 @@
       - check_biosdevname.found == 0
    
   handlers:
-    - name: Write-changes-GRUB
-      shell: grub2-mkconfig 
+    - name: Copy Network interface config file
+      copy:
+        remote_src: yes
+        src: /etc/sysconfig/network-scripts/ifcfg-enp0s5
+        dest: /etc/sysconfig/network-scripts/ifcfg-eth0   
+      listen: Fix-network-and-write-grub-changes  
+
+    - name: Network configuration NetIfName Replaced
+      replace:
+        path: /etc/sysconfig/network-scripts/ifcfg-eth0
+        regexp: '=enp0s5'
+        replace: '=eth0'
+      listen: Fix-network-and-write-grub-changes
+
+    - name: Write-changes-GRUB to output file
+      shell: grub2-mkconfig -o /boot/grub2/grub.cfg
+      listen: Fix-network-and-write-grub-changes
