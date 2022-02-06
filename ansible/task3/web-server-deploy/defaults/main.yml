@@ -1,2 +1,4 @@
 ---
 # defaults file for web-server-deploy
+firewall_service: http
+firewall_zone: public

@@ -4,7 +4,8 @@
 #ansible-playbook -i inventory.yml task1/http-deploy.yml --ask-become-pass
 
 - name: httpd service deployed
-  hosts: vm-nodes-centos
+  # hosts: vm-nodes-centos
+  hosts: node1.example.com
   remote_user: ansible
   become: yes
   become_method: sudo

@@ -1,0 +1,17 @@
+---
+# HOW TO RUN
+# cd /home/ansible/devops-school/ansible
+# ansible-playbook -i inventory.yml task3/httpd-role-run.yml --ask-become-pass
+
+- name: httpd service deployed
+  hosts: vm-nodes-centos
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+
+  roles: 
+    - web-server-deploy
+  # tasks: 
+  # - debug:
+  #     msg: "{{ ansible_os_family }}"
