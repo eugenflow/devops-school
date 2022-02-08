@@ -1,0 +1,15 @@
+---
+# HOW TO RUN
+# cd /home/ansible/devops-school/ansible
+# ansible-playbook -i inventory.yml task3/ftp-role-run.yml --ask-become-pass
+
+- name: ftp service deployed and started
+  hosts: vm-nodes-centos
+  # hosts: node2.example.com
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+
+  roles: 
+    - ftp-server-deploy

@@ -1,2 +1,24 @@
 ---
 # defaults file for ftp-server-deploy
+#Paths and directories:
+default_ftp_config: /etc/vsftpd/vsftpd.conf
+backup_ftp_config: /etc/vsftpd/vsftpd.bak
+ftp_root: /var/ftp/pub
+ftp_upload: /var/ftp/pub/upload 
+
+#
+ftp_user: ftp
+
+#Firewall vars
+firewall_service: ftp
+firewall_ftp_passive_range: 30000-31000/tcp
+firewall_zone: public
+
+#Vsftpd config file vars
+anonymous_enable: YES
+anon_upload_enable: YES
+anon_mkdir_write_enable: YES
+chown_uploads: YES
+chroot_local_user: YES
+write_enable: YES
+chown_username: ftp
