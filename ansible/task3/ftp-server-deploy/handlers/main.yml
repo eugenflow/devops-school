@@ -1,2 +1,8 @@
 ---
 # handlers file for ftp-server-deploy
+- name: FTP Service Restarted to apply config
+  systemd:
+    state: restarted
+    name: vsftpd
+    enabled: yes
+  listen: ftp_config_is_applied
