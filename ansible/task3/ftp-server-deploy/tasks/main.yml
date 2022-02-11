@@ -36,7 +36,6 @@
     dest: "{{ default_ftp_config }}"
     backup: yes 
     force: yes
-  notify: ftp_config_is_applied
 
 - name: Selinux anon write flag
   seboolean:
@@ -68,3 +67,9 @@
 
 - name: Apply new SELinux file context to filesystem
   command: restorecon -R -v "{{ ftp_upload }}"
+
+- name: FTP Service Restarted to apply config
+  systemd:
+    state: restarted
+    name: vsftpd
+    enabled: yes
