@@ -4,8 +4,8 @@
 #ansible-playbook -i inventory.yml task1/http-deploy.yml --ask-become-pass
 
 - name: httpd service deployed
-  # hosts: vm-nodes-centos
-  hosts: node1.example.com
+  hosts: vm-nodes-centos
+  #hosts: node1.example.com
   remote_user: ansible
   become: yes
   become_method: sudo
@@ -36,8 +36,13 @@
       immediate: yes
 #    register: output
  
-  - name: Index.html file loaded to /var/www/html/index.html
-    copy:
-      src: /home/ansible/devops-school/ansible/template-index.html
-      dest: /var/www/html/index.html
+  # - name: Index.html file loaded to /var/www/html/index.html
+  #   copy:
+  #     src: /home/ansible/devops-school/ansible/template-index.html
+  #     dest: /var/www/html/index.html
 #    register: output
+  - name: Creating a file with content
+    lineinfile:
+      dest: "/var/www/html/index.html"
+      line: "Welcome to my web server!!!"
+      create: yes

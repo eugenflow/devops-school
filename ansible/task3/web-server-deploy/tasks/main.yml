@@ -22,8 +22,9 @@
     permanent: yes
     immediate: yes
 
-- name: Index.html file loaded to /var/www/html/index.html
-  copy:
-    src: /home/ansible/devops-school/ansible/template-index.html
-    dest: /var/www/html/index.html
+- name: Creating a file with content
+  lineinfile:
+    dest: "/var/www/html/index.html"
+    line: "Welcome to my web server!!!"
+    create: yes
   notify: restart-apache-service
