@@ -60,7 +60,7 @@
     mode: '0755'
 
 - name: Allow selinux anon write to folder
-  community.general.sefcontext:
+  sefcontext:
     target: "{{ ftp_upload }}"
     setype: public_content_rw_t
     state: present
