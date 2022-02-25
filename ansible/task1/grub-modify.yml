@@ -53,7 +53,7 @@
       state: present
       backrefs: yes
     notify: 
-      - Write-changes-GRUB
+      - Fix-network-and-write-grub-changes
     when: 
       - check_net_ifnames.found == 0
       - check_biosdevname.found == 1
@@ -68,7 +68,7 @@
       state: present
       backrefs: yes
     notify: 
-      - Write-changes-GRUB
+      - Fix-network-and-write-grub-changes
     when: 
       - check_net_ifnames.found == 1
       - check_biosdevname.found == 0
